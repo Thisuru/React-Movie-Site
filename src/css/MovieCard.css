@@ -1,110 +1,107 @@
 .movie-card {
   position: relative;
-  border-radius: 8px;
+  border-radius: 14px;
   overflow: hidden;
-  background-color: #1a1a1a;
-  transition: transform 0.2s;
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
 .movie-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.32);
 }
 
 .movie-poster {
   position: relative;
-  aspect-ratio: 2/3;
+  aspect-ratio: 2 / 3;
   width: 100%;
+  overflow: hidden;
+  background: #0b1220;
 }
 
-.movie-poster img {
+.movie-poster-image {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+.movie-card:hover .movie-poster-image {
+  transform: scale(1.03);
 }
 
 .movie-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.8)
+    rgba(0, 0, 0, 0.72)
   );
   opacity: 0;
-  transition: opacity 0.2s;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 1rem;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
 .movie-card:hover .movie-overlay {
   opacity: 1;
 }
 
-.favorite-btn {
+.favorite-button {
   position: absolute;
   top: 1rem;
   right: 1rem;
   color: white;
   font-size: 1.5rem;
   padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  pointer-events: auto;
 }
 
-.favorite-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+.favorite-button:hover {
+  background-color: rgba(17, 24, 39, 0.95);
+  transform: scale(1.05);
 }
 
-.favorite-btn.active {
+.favorite-button.active {
   color: #ff4757;
 }
 
-.rating-select {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
 .movie-info {
-  padding: 1rem;
-  flex: 1;
+  padding: 1rem 0.9rem 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  background: rgba(17, 24, 39, 0.9);
+  flex: 1;
 }
 
 .movie-info h3 {
   font-size: 1rem;
   margin: 0;
+  color: #f8fafc;
+  line-height: 1.4;
+  font-weight: 700;
 }
 
 .movie-info p {
-  color: #999;
+  color: #cbd5e1;
   font-size: 0.9rem;
-}
-
-.user-rating {
-  color: #ffd700;
-  font-size: 0.9rem;
-  margin-top: auto;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -113,12 +110,12 @@
   }
 
   .movie-info {
-    padding: 0.75rem;
+    padding: 0.8rem 0.75rem 0.9rem;
   }
 
-  .favorite-btn {
-    width: 32px;
-    height: 32px;
+  .favorite-button {
+    width: 34px;
+    height: 34px;
     font-size: 1.2rem;
   }
 }

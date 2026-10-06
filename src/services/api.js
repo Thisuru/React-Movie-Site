@@ -11,7 +11,6 @@ export const getPopularMovies = async () => {
   }
 
   const data = await response.json();
-  console.log("Popular Movies Data:", data); // Log the entire response data
   return data.results;
 };
 

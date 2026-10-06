@@ -1,41 +1,51 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import MovieCards from "../components/MovieCards";
+import { getPopularMovies, searchMovies } from "../services/api";
 import "../css/Home.css";
+
+const normalizeMovie = (movie) => ({
+  id: movie.id,
+  title: movie.title || movie.original_title || "Untitled",
+  releaseDate: movie.release_date || "N/A",
+  url: movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "",
+});
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const movies = [
-    {
-      id: 1,
-      title: "The Shawshank Redemption",
-      releaseDate: "1994-09-23",
-      url: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-    },
-    {
-      id: 2,
-      title: "The Godfather",
-      releaseDate: "1972-03-14",
-      url: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
-    },
-    {
-      id: 3,
-      title: "The Dark Knight",
-      releaseDate: "2008-07-16",
-      url: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-    },
-    {
-      id: 4,
-      title: "Forrest Gump",
-      releaseDate: "1994-07-06",
-      url: "https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg",
-    },
-  ];
+  const fetchMovies = useCallback(async (query = "") => { 
+    setLoading(true);
+    setError("");
 
-  const handleSearch = (e) => {
+    try {
+      const results = query.trim()
+        ? await searchMovies(query)
+        : await getPopularMovies();
+
+      setMovies(results.map(normalizeMovie));
+    } catch (err) {
+      console.error(err);
+      setError("Unable to load movies right now. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void (async () => {
+      await fetchMovies();
+    })();
+  }, [fetchMovies]);
+
+  const handleSearch = async (e) => {
     e.preventDefault();
-    // Implement search functionality here
-    setSearchQuery("");
+    if (!searchQuery.trim()) return;
+    await fetchMovies(searchQuery);
   };
 
   return (
@@ -48,18 +58,22 @@ function Home() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        <button type="submit" className="search-button">
-          Search
+        <button type="submit" className="search-button" disabled={loading}>
+          {loading ? "Loading..." : "Search"}
         </button>
       </form>
-      <div className="movies-grid">
-        {movies.map(
-          (movie) =>
-            movie.title.toLowerCase().includes(searchQuery.toLowerCase()) && (
-              <MovieCards key={movie.id} movie={movie} />
-            ),
-        )}
-      </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      {!loading && !error && (
+        <div className="movies-grid">
+          {movies.length > 0 ? (
+            movies.map((movie) => <MovieCards key={movie.id} movie={movie} />)
+          ) : (
+            <p>No movies found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
