@@ -1,10 +1,13 @@
 import "../css/MovieCard.css"
+import { useMovieContext } from "../contexts/useMovieContext"
 
 const MovieCards = ({ movie }) => {
   const { title, releaseDate, url } = movie || {}
+  const { isFavorite, toggleFavorite } = useMovieContext()
+  const isMovieFavorite = isFavorite(movie?.id)
 
   function onFavoriteClick() {
-    alert(`You favorited ${title}!`)
+    toggleFavorite(movie)
   }
 
   return (
@@ -12,8 +15,13 @@ const MovieCards = ({ movie }) => {
       <div className="movie-poster">
         <img src={url} alt={title} className="movie-poster-image" />
         <div className="movie-overlay">
-          <button className="favorite-button" onClick={onFavoriteClick}>
-            ♥
+          <button
+            type="button"
+            className={`favorite-button ${isMovieFavorite ? "active" : ""}`}
+            onClick={onFavoriteClick}
+            aria-label={isMovieFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            {isMovieFavorite ? "♥" : "♡"}
           </button>
         </div>
       </div>
