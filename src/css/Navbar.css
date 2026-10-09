@@ -1,15 +1,18 @@
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
+  left: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2.5rem;
-  background: rgba(9, 12, 18, 0.8);
+  background: rgba(9, 12, 18, 0.9);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(148, 163, 184, 0.18);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .navbar-brand {
